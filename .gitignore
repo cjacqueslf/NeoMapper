@@ -1,0 +1,36 @@
+.venv/
+.venv-*/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+.mypy_cache/
+.ruff_cache/
+.tmp/
+var/
+
+# Runtime data belongs outside the repository.
+logs/
+output/
+NEOMapper_config.ini
+
+# Editor and operating-system files.
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
+
+# Release signing material must never be committed.
+*.pfx
+*.p12
+*.pem
+*.key
+
+# Local visual reference; provenance is not documented for redistribution.
+docs/stellarium-reference.jpg
+docs/Manual_do_Usuario_NEOMapper_4.1.10.docx
+docs/manual_assets/contact_sheet.jpg

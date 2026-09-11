@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  verify-and-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Verify tag matches application version
+        shell: pwsh
+        env:
+          PYTHONPATH: src
+        run: |
+          $applicationVersion = python -c "from neomapper.shared.version import APP_VERSION; print(APP_VERSION)"
+          if ("${{ github.ref_name }}" -notmatch '^v\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$') {
+            throw "Tag ${{ github.ref_name }} is not a supported release tag."
+          }
+          $tagVersion = "${{ github.ref_name }}" -replace '^v', '' -replace '-.*$', ''
+          if ($applicationVersion -ne $tagVersion) {
+            throw "Tag ${{ github.ref_name }} does not match application version $applicationVersion."
+          }
+      - run: python -m pip install -e ".[dev,release]"
+      - run: python -m pytest -q
+        env:
+          QT_QPA_PLATFORM: offscreen
+      - run: choco install innosetup --no-progress -y
+      - name: Build and validate release artifacts
+        shell: pwsh
+        run: .\scripts\build_release.ps1 -SkipTests
+      - uses: actions/upload-artifact@v6
+        with:
+          name: NEOMapper-${{ github.ref_name }}
+          path: |
+            dist/NEOMapper-*-Windows-x64-Setup.exe
+            dist/NEOMapper-Windows-x64.zip
+            dist/*Manual*.docx
+            dist/neomapper-*.whl
+            dist/neomapper-*.tar.gz
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+      - name: Publish GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $files = Get-ChildItem dist -File | Where-Object {
+            $_.Name -match '^(NEOMapper-.*-Setup\.exe|NEOMapper-Windows-x64\.zip|(?:Manual_do_Usuario_NEOMapper_|Manual_del_Usuario_NEOMapper_|NEOMapper_User_Manual_).*\.docx|neomapper-.*\.(whl|tar\.gz)|SHA256SUMS\.txt)$'
+          } | ForEach-Object { $_.FullName }
+          if (-not $files) { throw "No release artifacts found." }
+          $arguments = @("release", "create", "${{ github.ref_name }}", "--verify-tag", "--generate-notes", "--title", "NEOMapper ${{ github.ref_name }}")
+          if ("${{ github.ref_name }}" -match '-') { $arguments += "--prerelease" }
+          $arguments += $files
+          & gh @arguments
+          if ($LASTEXITCODE -ne 0) { throw "GitHub Release publication failed." }
