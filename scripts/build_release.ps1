@@ -29,8 +29,18 @@ try {
     & $pythonCommand.Source -m twine check dist\*.whl dist\*.tar.gz
     if ($LASTEXITCODE -ne 0) { throw "Package metadata validation failed." }
 
+    $version = & $pythonCommand.Source -c "from neomapper.shared.version import APP_VERSION; print(APP_VERSION)"
     & $pythonCommand.Source scripts\build_user_manual.py
     if ($LASTEXITCODE -ne 0) { throw "User manual build failed." }
+    $manualSource = Join-Path $repositoryRoot "docs\Manual_do_Usuario_NEOMapper_$version.docx"
+    @(
+        @{ Language = "en"; Name = "NEOMapper_User_Manual_$version.docx" },
+        @{ Language = "es"; Name = "Manual_del_Usuario_NEOMapper_$version.docx" }
+    ) | ForEach-Object {
+        $translatedManual = Join-Path $repositoryRoot "docs\$($_.Name)"
+        & $pythonCommand.Source scripts\translate_user_manual.py $_.Language $manualSource $translatedManual
+        if ($LASTEXITCODE -ne 0) { throw "User manual translation failed for $($_.Language)." }
+    }
 
     & $pythonCommand.Source -m PyInstaller `
         --noconfirm `
@@ -103,7 +113,6 @@ try {
         throw "Frozen Cartopy/PROJ runtime self-test failed."
     }
 
-    $version = & $pythonCommand.Source -c "from neomapper.shared.version import APP_VERSION; print(APP_VERSION)"
     $manuals = @(
         "Manual_do_Usuario_NEOMapper_$version.docx",
         "NEOMapper_User_Manual_$version.docx",

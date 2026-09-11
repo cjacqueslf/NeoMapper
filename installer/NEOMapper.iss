@@ -1,5 +1,5 @@
 #ifndef MyAppVersion
-  #define MyAppVersion "4.2.1"
+  #define MyAppVersion "4.2.2"
 #endif
 
 #define MyAppName "NEOMapper"
