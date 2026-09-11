@@ -62,24 +62,18 @@ class MainWindowTests(unittest.TestCase):
             finally:
                 reopened.close()
 
-    def test_ephemeris_dialog_opens_with_local_and_utc_defaults(self) -> None:
-        from datetime import datetime, timezone
-        from neomapper.shared.utils import timezone_from_reference
-
+    def test_ephemeris_dialog_defaults_to_selected_observation_datetime(self) -> None:
         with tempfile.TemporaryDirectory() as folder, patch.dict(os.environ, {"NEOMAPPER_DATA_DIR": folder}):
             window = NEOMapperMainWindow()
             try:
-                window.ref_lat_edit.setText("-19.9")
-                window.ref_lon_edit.setText("-43.9")
+                selected = gui.QDateTime(2028, 2, 29, 22, 15, 0)
+                window.datetime_edit.setDateTime(selected)
                 for mode in ("LOCAL", "UTC"):
                     window.time_mode_combo.setCurrentText(mode)
-                    zone = timezone.utc if mode == "UTC" else timezone_from_reference(-19.9, -43.9)[1]
-                    expected = datetime.now(zone).replace(tzinfo=None)
 
                     def inspect_dialog(dialog):
                         dates = dialog.findChildren(gui.QDateTimeEdit)
-                        start = dates[0].dateTime().toPython()
-                        self.assertLess(abs((start - expected).total_seconds()), 10)
+                        self.assertEqual(dates[0].dateTime(), selected)
                         self.assertEqual(dates[0].dateTime().secsTo(dates[1].dateTime()), 3600)
                         return 0
 

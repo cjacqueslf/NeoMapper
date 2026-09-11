@@ -779,9 +779,10 @@ class NEOMapperMainWindow(QMainWindow):
         about_layout.addWidget(self.create_section_label("About"))
         self.about_name = self.create_metric_card(about_layout, "Software", APP_TITLE, "MetricBlue")
         self.about_version = self.create_metric_card(about_layout, "Version", APP_VERSION, "MetricValue")
-        developer = QLabel("Developed by Cristóvão Jacques.")
+        developer = QLabel("Developed by Cristóvão Jacques in collaboration with OpenAI Codex.")
         developer.setObjectName("Muted")
-        self.tr_widgets["Developed by Cristóvão Jacques."] = developer
+        developer.setWordWrap(True)
+        self.tr_widgets["Developed by Cristóvão Jacques in collaboration with OpenAI Codex."] = developer
         about_layout.addWidget(developer)
         about_note = QLabel("NEOMapper — visibility mapping tool for near-Earth objects and planetary defense outreach.")
         about_note.setObjectName("Muted")
@@ -1876,16 +1877,13 @@ class NEOMapperMainWindow(QMainWindow):
 
     def open_ephemeris_dialog(self) -> None:
         dialog = QDialog(self); dialog.setWindowTitle(self.translator.tr("Ephemerides")); form = QFormLayout(dialog)
-        start = QDateTimeEdit(QDateTime.currentDateTime()); start.setCalendarPopup(True)
-        end = QDateTimeEdit(QDateTime.currentDateTime().addSecs(3600)); end.setCalendarPopup(True)
+        # Start reports from the observation instant selected on the first tab,
+        # rather than from the computer's current clock.
+        selected_datetime = self.datetime_edit.dateTime()
+        start = QDateTimeEdit(selected_datetime); start.setCalendarPopup(True)
+        end = QDateTimeEdit(selected_datetime.addSecs(3600)); end.setCalendarPopup(True)
         start.setDisplayFormat("yyyy-MM-dd HH:mm")
         end.setDisplayFormat("yyyy-MM-dd HH:mm")
-        from datetime import datetime, timezone
-        from neomapper.shared.utils import timezone_from_reference
-        zone = timezone.utc if self.time_mode_combo.currentText() == "UTC" else timezone_from_reference(float(self.ref_lat_edit.text()), float(self.ref_lon_edit.text()))[1]
-        current = datetime.now(zone).replace(tzinfo=None)
-        start.setDateTime(QDateTime(current))
-        end.setDateTime(QDateTime(current + timedelta(hours=1)))
         form.addRow(QLabel(self.time_mode_combo.currentText()))
         interval = QSpinBox(); interval.setRange(1, 10080); interval.setValue(10)
         unit = QComboBox(); unit.addItems([self.translator.tr("minute"), self.translator.tr("hour"), self.translator.tr("day")])

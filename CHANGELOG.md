@@ -20,6 +20,11 @@ Todas as mudanças relevantes do NEOMapper serão registradas neste arquivo.
 
 ### Corrigido
 
+- Quadro de efemérides usa como padrão a data e hora selecionadas na aba
+  Objeto, em vez da hora do sistema.
+- Aba Sobre passa a creditar o desenvolvimento a Cristóvão Jacques em
+  colaboração com OpenAI Codex, com quebra de linha para o texto completo.
+
 - Resumo orbital ajusta a altura da tabela às três linhas e às quebras de texto,
   mantendo a maior aproximação visível no painel sem precisar expandir.
 - O cálculo do resumo exibe uma mensagem visível abaixo do gráfico.
