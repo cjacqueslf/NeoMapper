@@ -11,7 +11,7 @@ license = "MIT"
 maintainers = [
     {name = "cjacqueslf", email = "cjacqueslf@gmail.com"},
 ]
-requires-python = ">=3.11,<3.15"
+requires-python = ">=3.11,<3.13"
 keywords = ["astronomy", "near-earth-objects", "observational-planning", "planetary-defense"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -22,8 +22,6 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering :: Astronomy",
 ]
 dependencies = [

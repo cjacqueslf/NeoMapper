@@ -37,7 +37,7 @@ Para produzir os artefatos de lançamento no Windows:
 
 ## Publicação no GitHub
 
-Cada push e pull request executa testes no Windows com Python 3.11 a 3.14. Para
+Cada push e pull request executa testes no Windows com Python 3.11 e 3.12. Para
 publicar uma versão, atualize a versão e o changelog, faça o merge na branch
 principal e crie uma tag anotada com o mesmo número:
 

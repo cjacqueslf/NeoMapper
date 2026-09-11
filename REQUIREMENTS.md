@@ -127,7 +127,9 @@ animações temporais.
 
 ## 3. Requisitos não funcionais
 
-- Compatibilidade com Python 3.11 a 3.14 e Windows.
+- Compatibilidade com Python 3.11 e 3.12 no Windows. A linha estável atual de
+  `pyproj`/PROJ usada pelo aplicativo ainda não fornece wheels Windows para
+  Python 3.13 ou superior.
 - Falhas de rede não podem corromper configurações nem saídas existentes.
 - O domínio científico não deve depender de PySide6, rede ou sistema de
   arquivos.

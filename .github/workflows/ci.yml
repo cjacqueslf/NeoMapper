@@ -14,7 +14,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12", "3.13", "3.14"]
+        # pyproj 3.6 is intentionally kept for the stable Windows PROJ 9.3
+        # runtime used by the packaged application. Its published Windows
+        # wheels currently support Python 3.11 and 3.12 only.
+        python-version: ["3.11", "3.12"]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
