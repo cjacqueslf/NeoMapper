@@ -9,7 +9,8 @@ import time
 import os
 
 from PySide6.QtCore import QObject, QRunnable, Qt, QDateTime, QEventLoop, QThreadPool, QTimer, Signal
-from PySide6.QtGui import QIcon, QPixmap
+from PySide6.QtGui import QIcon, QPixmap, QDesktopServices
+from PySide6.QtCore import QUrl
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QLabel, QLineEdit, QPushButton,
     QVBoxLayout, QHBoxLayout, QFrame, QComboBox, QMessageBox,
@@ -19,10 +20,11 @@ from PySide6.QtWidgets import (
 from neomapper.application.ephemerides import ObjectNotFoundError
 from neomapper.infrastructure.config import load_config, save_config
 from neomapper.infrastructure.paths import logs_dir, output_dir, object_output_dir
+from neomapper.infrastructure.releases import latest_windows_release
 from neomapper.presentation.animation import generate_animation
 from neomapper.presentation.altitude_plot import build_altitude_chart, AltitudeChartResult
 from neomapper.presentation.object_summary import ObjectSummaryWidget
-from neomapper.presentation.context_help import help_text, show_help
+from neomapper.presentation.context_help import help_text, show_help, open_manual
 from neomapper.application.object_summary import calculate_object_summary
 from neomapper.infrastructure.ephemeris.summary import HorizonsSummaryProvider
 from neomapper.presentation.distances import AU_KM, format_distance, update_figure_distances
@@ -33,6 +35,7 @@ from neomapper.application.ephemerides import query_report_ephemerides
 from neomapper.presentation.skymap_observing import build_sky_figure
 from neomapper.shared.utils import parse_input_time_for_mode, safe_filename
 from neomapper.shared.version import APP_TITLE, APP_VERSION
+from packaging.version import Version
 
 
 STYLE = """
@@ -776,6 +779,10 @@ class NEOMapperMainWindow(QMainWindow):
         about_layout.addWidget(self.create_section_label("About"))
         self.about_name = self.create_metric_card(about_layout, "Software", APP_TITLE, "MetricBlue")
         self.about_version = self.create_metric_card(about_layout, "Version", APP_VERSION, "MetricValue")
+        developer = QLabel("Developed by Cristóvão Jacques.")
+        developer.setObjectName("Muted")
+        self.tr_widgets["Developed by Cristóvão Jacques."] = developer
+        about_layout.addWidget(developer)
         about_note = QLabel("NEOMapper — visibility mapping tool for near-Earth objects and planetary defense outreach.")
         about_note.setObjectName("Muted")
         about_note.setWordWrap(True)
@@ -799,6 +806,15 @@ class NEOMapperMainWindow(QMainWindow):
         self.tr_widgets["Help"] = self.help_btn
         self.help_btn.clicked.connect(lambda: show_help(self, self.language_header_combo.currentText()))
         about_layout.addWidget(self.help_btn)
+        self.manual_btn = QPushButton()
+        self.tr_widgets["Open user manual"] = self.manual_btn
+        self.manual_btn.clicked.connect(lambda: open_manual(self, self.language_header_combo.currentText()))
+        about_layout.addWidget(self.manual_btn)
+        self.check_updates_btn = QPushButton()
+        self.check_updates_btn.setObjectName("Blue")
+        self.tr_widgets["Check for updates"] = self.check_updates_btn
+        self.check_updates_btn.clicked.connect(self.check_for_updates)
+        about_layout.addWidget(self.check_updates_btn)
         about_layout.addStretch()
         self.right_stack.addWidget(about_page)
 
@@ -1662,6 +1678,38 @@ class NEOMapperMainWindow(QMainWindow):
             self.anim_progress_label.setText(self.translator.tr("Cancel requested. Finishing current frame..."))
         QApplication.processEvents()
 
+    def check_for_updates(self) -> None:
+        """Check GitHub in a worker so the About page never freezes."""
+        self.check_updates_btn.setEnabled(False)
+        self.check_updates_btn.setText(self.translator.tr("Checking for updates…"))
+
+        def available(release) -> None:
+            self.check_updates_btn.setEnabled(True)
+            self.check_updates_btn.setText(self.translator.tr("Check for updates"))
+            if release.version <= Version(APP_VERSION):
+                QMessageBox.information(self, APP_TITLE, self.translator.tr("You already have the latest version."))
+                return
+            answer = QMessageBox.question(
+                self, APP_TITLE,
+                self.translator.tr("Version {version} is available. Download the installer now?", version=release.version),
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes,
+            )
+            if answer == QMessageBox.Yes:
+                QDesktopServices.openUrl(QUrl(release.installer_url))
+
+        def failed(error) -> None:
+            self.check_updates_btn.setEnabled(True)
+            self.check_updates_btn.setText(self.translator.tr("Check for updates"))
+            exc, _traceback = error
+            QMessageBox.warning(self, APP_TITLE, self.translator.tr("Could not check for updates: {error}", error=exc))
+
+        worker = BackgroundWorker(lambda _emit: latest_windows_release())
+        self.active_workers.add(worker)
+        worker.signals.result.connect(available)
+        worker.signals.error.connect(failed)
+        worker.signals.finished.connect(lambda: self.active_workers.discard(worker))
+        self.thread_pool.start(worker)
+
     def _start_worker(self, function, on_result, on_error, on_progress=None, on_finished=None):
         worker = BackgroundWorker(function)
         self.active_workers.add(worker)
@@ -1728,7 +1776,9 @@ class NEOMapperMainWindow(QMainWindow):
             step_min = selected_step if isinstance(selected_step, int) else 1
             stamp = start_qdt.toString("yyyyMMdd_HHmmss")
             generation_stamp = QDateTime.currentDateTime().toString("HHmmsszzz")
-            base_output = out_dir / f"{safe_obj}_animation_{stamp}_{generation_stamp}"
+            map_name = self.translator.tr(self.map_type_combo.currentData() or self.map_type_combo.currentText())
+            safe_map_name = safe_filename(map_name).replace("_", "-")
+            base_output = out_dir / f"{safe_obj}_{safe_map_name}_animation_{stamp}_{generation_stamp}"
 
             fmt = self.anim_format_combo.currentText().upper()
             export_gif = "GIF" in fmt
@@ -1758,10 +1808,7 @@ class NEOMapperMainWindow(QMainWindow):
                 fps=fps, export_gif=export_gif, export_mp4=export_mp4,
                 max_frames=self.animation_frame_limit.value(),
                 calendar_step=calendar_step,
-                # The in-app player needs the rendered PNGs for the lifetime of
-                # the window. Frames not requested by the user are removed when
-                # replaced or when the application closes.
-                keep_frames=True, trail_enabled=self.cb_anim_trail.isChecked(),
+                keep_frames=keep_frames, trail_enabled=self.cb_anim_trail.isChecked(),
                 time_label_enabled=False,
                 map_type=self.map_type_combo.currentData() or self.map_type_combo.currentText(),
                 cancel_callback=lambda: self.animation_cancel_requested,
@@ -1804,8 +1851,6 @@ class NEOMapperMainWindow(QMainWindow):
             last_frames = sorted(frames_dir.glob("frame_*.png")) if frames_dir.exists() else []
             if last_frames:
                 self.set_player_frames(last_frames)
-                if not keep_frames:
-                    self._transient_frames_dir = frames_dir
                 self.last_png = last_frames[0]
                 self.map_title.setText(getattr(self, "translations", {}).get("Map Preview", "Map Preview") + f" — {last_frames[-1].name}")
         except Exception as exc:

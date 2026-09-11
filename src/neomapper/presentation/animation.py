@@ -125,6 +125,8 @@ def generate_animation(
 
     base_path = Path(base_output).with_suffix("")
     frames_dir = base_path.with_name(base_path.name + "_frames")
+    # Frames are always needed while encoding, but only persistent PNG output
+    # should leave this directory behind.
     frames_dir.mkdir(parents=True, exist_ok=True)
 
     frame_files = []

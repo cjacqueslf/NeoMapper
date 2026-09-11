@@ -64,18 +64,19 @@ def test_pa_column_only_for_comets_and_local_date_rollover() -> None:
     try:
         widget.set_language("PT")
         widget.set_summary(data, "LOCAL", -19.9, -43.9)
-        assert not widget.table.isColumnHidden(9)
+        assert not widget.table.isColumnHidden(10)
         assert widget.table.item(1, 1).text() == "2026-09-09"
-        assert widget.table.item(1, 9).text() == "260,0°"
-        assert "03h 26m" in widget.table.item(1, 5).text()
+        assert widget.table.item(1, 2).text() == "22:00"
+        assert widget.table.item(1, 10).text() == "260,0°"
+        assert "03h 26m" in widget.table.item(1, 6).text()
         assert widget.table.item(1, 0).text() == "Data selecionada"
-        assert widget.table.item(1, 3).text() == "264.638.633 km"
-        assert widget.table.item(1, 4).text() == "163.061.679 km"
+        assert widget.table.item(1, 4).text() == "264.638.633 km"
+        assert widget.table.item(1, 5).text() == "163.061.679 km"
         widget.set_distance_unit("UA")
-        assert widget.table.item(1, 3).text() == "1,769000 UA"
-        assert widget.table.item(1, 4).text() == "1,090000 UA"
+        assert widget.table.item(1, 4).text() == "1,769000 UA"
+        assert widget.table.item(1, 5).text() == "1,090000 UA"
         widget.set_summary(replace(data, target=replace(data.target, is_comet=False)), "UTC", 0, 0)
-        assert widget.table.isColumnHidden(9)
+        assert widget.table.isColumnHidden(10)
         widget.reset()
         assert widget.table.isHidden()
     finally:
@@ -112,9 +113,9 @@ def test_summary_is_below_plot_in_projection_and_failure_keeps_chart(tmp_path) -
                 assert window.orbital_summary_btn.objectName() == "Blue"
                 assert not window.orbital_summary.expand.isHidden()
                 window.distance_unit_combo.setCurrentText("UA")
-                assert window.orbital_summary.table.item(1, 3).text().endswith((" AU", " UA"))
+                assert window.orbital_summary.table.item(1, 4).text().endswith((" AU", " UA"))
                 window.distance_unit_combo.setCurrentText("km")
-                assert window.orbital_summary.table.item(1, 3).text().endswith(" km")
+                assert window.orbital_summary.table.item(1, 4).text().endswith(" km")
                 assert window.map_area.isAncestorOf(window.orbital_summary)
                 assert window.map_area.isAncestorOf(window.moon_curve_btn)
                 assert not window.right_stack.isAncestorOf(window.orbital_summary)

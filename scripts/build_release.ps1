@@ -103,12 +103,6 @@ try {
         throw "Frozen Cartopy/PROJ runtime self-test failed."
     }
 
-    $archive = Join-Path $repositoryRoot "dist\NEOMapper-Windows-x64.zip"
-    if (Test-Path -LiteralPath $archive) {
-        Remove-Item -LiteralPath $archive -Force
-    }
-    Compress-Archive -Path "dist\NEOMapper\*" -DestinationPath $archive -CompressionLevel Optimal
-
     $version = & $pythonCommand.Source -c "from neomapper.shared.version import APP_VERSION; print(APP_VERSION)"
     $manuals = @(
         "Manual_do_Usuario_NEOMapper_$version.docx",
@@ -120,6 +114,14 @@ try {
         throw "Versioned user manuals were not found: $($missingManuals -join ', ')"
     }
     Copy-Item -LiteralPath $manuals -Destination $distDirectory -Force
+    $manualDirectory = Join-Path $distDirectory "NEOMapper\manuals"
+    New-Item -ItemType Directory -Path $manualDirectory -Force | Out-Null
+    Copy-Item -LiteralPath $manuals -Destination $manualDirectory -Force
+    $archive = Join-Path $repositoryRoot "dist\NEOMapper-Windows-x64.zip"
+    if (Test-Path -LiteralPath $archive) {
+        Remove-Item -LiteralPath $archive -Force
+    }
+    Compress-Archive -Path "dist\NEOMapper\*" -DestinationPath $archive -CompressionLevel Optimal
     $innoCompiler = Get-Command iscc -ErrorAction SilentlyContinue
     if (-not $innoCompiler) {
         $userInnoCompiler = Join-Path $env:LOCALAPPDATA "Programs\Inno Setup 6\ISCC.exe"

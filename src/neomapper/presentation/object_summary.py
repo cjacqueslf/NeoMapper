@@ -58,7 +58,7 @@ class ObjectSummaryWidget(QWidget):
         self.loading.setWordWrap(True)
         self.loading.setStyleSheet("font-size: 14px; font-weight: bold; color: #ffcc33; padding: 12px;")
         layout.addWidget(self.loading)
-        self.table = SummaryTable(3, 10)
+        self.table = SummaryTable(3, 11)
         self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table.verticalHeader().hide()
         self.table.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Fixed)
@@ -127,12 +127,12 @@ class ObjectSummaryWidget(QWidget):
         if self.data is None:
             self.note.setText(tr("Calculate summary with its button"))
             return
-        keys = ["Ephemerides", "Date", "Magnitude", "Solar distance", "Earth distance",
+        keys = ["Ephemerides", "Date", "Time", "Magnitude", "Solar distance", "Earth distance",
                 "Right Ascension", "Declination", "Elongation", "Phase angle", "Tail PA"]
         self.table.setHorizontalHeaderLabels([tr(key) for key in keys])
         for index, key in enumerate(keys):
             self.table.horizontalHeaderItem(index).setToolTip(help_text(key, self.language))
-        self.table.setColumnHidden(9, not self.data.target.is_comet)
+        self.table.setColumnHidden(10, not self.data.target.is_comet)
         perihelion_key = "Next perihelion" if self.data.perihelion_refined else ("Estimated perihelion" if self.data.extended_search else "Perihelion")
         events = [(perihelion_key, self.data.perihelion), ("Selected date", self.data.selected),
                   ("Nearest approach", self.data.closest)]
@@ -142,7 +142,7 @@ class ObjectSummaryWidget(QWidget):
 
         for index, (key, row) in enumerate(events):
             date, mode = format_time_for_map(row.instant, self.mode, self.latitude, self.longitude)
-            values = [tr(key), date[:10], number(row.magnitude, 1, " " + row.magnitude_band),
+            values = [tr(key), date[:10], date[11:16], number(row.magnitude, 1, " " + row.magnitude_band),
                       format_distance(None if row.radius_au is None else row.radius_au * AU_KM, self.distance_unit, self.language),
                       format_distance(None if row.delta_au is None else row.delta_au * AU_KM, self.distance_unit, self.language),
                       format_right_ascension(row.ra_deg, self.language), format_declination(row.dec_deg, self.language),
@@ -152,7 +152,7 @@ class ObjectSummaryWidget(QWidget):
                 item.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter if column == 0 else Qt.AlignCenter)
                 help_key = "Perihelion" if column == 0 and index == 0 else (key if column == 0 else keys[column])
                 explanation = help_text(help_key, self.language)
-                item.setToolTip(f"{date} {mode}" if column == 1 else value + ("\n" + explanation if explanation else ""))
+                item.setToolTip(f"{date} {mode}" if column in (1, 2) else value + ("\n" + explanation if explanation else ""))
                 self.table.setItem(index, column, item)
         self.table.resizeColumnsToContents()
         self.table.fit_rows()
@@ -172,7 +172,7 @@ class ObjectSummaryWidget(QWidget):
         if self.data.target.is_comet:
             details += " " + tr("Summary tail conventions")
         self.note.setToolTip(details)
-        self.table.horizontalHeaderItem(9).setToolTip(tr("Summary tail conventions"))
+        self.table.horizontalHeaderItem(10).setToolTip(tr("Summary tail conventions"))
 
     def report(self) -> SummaryReport:
         if self.data is None:

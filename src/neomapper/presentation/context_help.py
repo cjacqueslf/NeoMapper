@@ -1,7 +1,12 @@
 """Contextual explanations shared by tooltips and the compact help window."""
 from html import escape
 
-from PySide6.QtWidgets import QDialog, QWidget, QVBoxLayout, QTextBrowser, QPushButton
+import sys
+from pathlib import Path
+
+from PySide6.QtCore import QUrl
+from PySide6.QtGui import QDesktopServices
+from PySide6.QtWidgets import QDialog, QWidget, QVBoxLayout, QTextBrowser, QPushButton, QMessageBox
 from neomapper.presentation.i18n import Translator
 
 
@@ -41,3 +46,21 @@ def show_help(parent: QWidget, language: str) -> None:
     close.clicked.connect(dialog.accept)
     layout.addWidget(close)
     dialog.exec()
+
+
+def manual_path(language: str) -> Path:
+    """Locate the bundled manual that matches the selected UI language."""
+    filename = {
+        "PT": "Manual_do_Usuario_NEOMapper_4.2.0.docx",
+        "ES": "Manual_del_Usuario_NEOMapper_4.2.0.docx",
+    }.get(language.upper(), "NEOMapper_User_Manual_4.2.0.docx")
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).parent / "manuals" / filename
+    return Path(__file__).resolve().parents[3] / "docs" / filename
+
+
+def open_manual(parent: QWidget, language: str) -> None:
+    path = manual_path(language)
+    if not path.exists() or not QDesktopServices.openUrl(QUrl.fromLocalFile(str(path))):
+        QMessageBox.warning(parent, Translator(language).tr("Help"),
+                            Translator(language).tr("Could not open the user manual."))
