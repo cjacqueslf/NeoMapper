@@ -2,7 +2,7 @@
 
 Todas as mudanças relevantes do NEOMapper serão registradas neste arquivo.
 
-## 4.2.0 — 2026-09-10
+## 4.2.1 — 2026-09-11
 
 ### Incluído
 

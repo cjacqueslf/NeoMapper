@@ -111,7 +111,7 @@ def test_summary_exports_current_units_and_full_instant(tmp_path: Path, language
         widget.set_distance_unit(unit)
         widget.set_summary(data, "LOCAL", -19.9, -43.9)
         report = widget.report()
-        assert len(report.headers) == 10
+        assert len(report.headers) == 11
         assert report.rows[1][1].startswith("2026-09-09")
         assert "LOCAL" in report.rows[1][1]
         assert report.rows[1][3] == widget.table.item(1, 3).text()
@@ -120,7 +120,7 @@ def test_summary_exports_current_units_and_full_instant(tmp_path: Path, language
         with csv_path.open(encoding="utf-8-sig", newline="") as stream:
             records = list(csv.reader(stream, delimiter=";"))
         assert len(records) == 4
-        assert records[2][1:11] == report.rows[1]
+        assert records[2][1:12] == report.rows[1]
         assert records[2][0] == data.target.name
         assert records[2][-1] == report.conventions
         pdf_path = tmp_path / "summary.pdf"

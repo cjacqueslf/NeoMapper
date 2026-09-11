@@ -1,2 +1,2 @@
-APP_VERSION = "4.2.0"
+APP_VERSION = "4.2.1"
 APP_TITLE = "NEOMapper"
