@@ -238,7 +238,11 @@
     "Consultar termos": "Consult terms",
     "Sobre → Ajuda ou Resumo Orbital → Ajuda": "About → Help or Orbital Summary → Help",
     "Versão 4.2.2   Windows   Setembro de 2026": "Version 4.2.2 Windows September 2026",
-    "Fim do Manual do Usuário do NEOMapper 4.2.2": "End of NEOMapper 4.2.2 User Manual"
+    "Fim do Manual do Usuário do NEOMapper 4.2.2": "End of NEOMapper 4.2.2 User Manual",
+    "Versão 4.2.3   Windows   Setembro de 2026": "Version 4.2.3 Windows September 2026",
+    "Baixe o arquivo NEOMapper-4.2.3-Windows-x64-Setup.exe na página oficial de Releases. Execute o instalador e abra o programa pelo menu Iniciar ou pelo atalho opcional da Área de Trabalho.": "Baixe o arquivo NEOMapper-4.2.3-Windows-x64-Setup.exe na página oficial de Releases. Run the installer and open the program via the Start menu or optional Desktop shortcut.",
+    "A versão 4.2.3 não possui assinatura digital. O Windows pode mostrar um aviso de reputação. Confirme que o arquivo veio da página oficial e compare seu SHA 256 com SHA256SUMS.txt.": "Version 4.2.3 does not have a digital signature. Windows may show a reputation warning. Confirm that the file came from the official page and compare its SHA 256 with SHA256SUMS.txt.",
+    "Fim do Manual do Usuário do NEOMapper 4.2.3": "End of NEOMapper 4.2.3 User Manual"
   },
   "es": {
     "Manual do Usuário do NEOMapper": "Manual de usuario NEOMapper",
@@ -479,6 +483,10 @@
     "Consultar termos": "Consultar términos",
     "Sobre → Ajuda ou Resumo Orbital → Ajuda": "Acerca de → Ayuda o Resumen de Orbital → Ayuda",
     "Versão 4.2.2   Windows   Setembro de 2026": "Versión 4.2.2 Windows Septiembre de 2026",
-    "Fim do Manual do Usuário do NEOMapper 4.2.2": "Fin del Manual de Usuario NEOMapper 4.2.2"
+    "Fim do Manual do Usuário do NEOMapper 4.2.2": "Fin del Manual de Usuario NEOMapper 4.2.2",
+    "Versão 4.2.3   Windows   Setembro de 2026": "Versión 4.2.3 Windows Septiembre de 2026",
+    "Baixe o arquivo NEOMapper-4.2.3-Windows-x64-Setup.exe na página oficial de Releases. Execute o instalador e abra o programa pelo menu Iniciar ou pelo atalho opcional da Área de Trabalho.": "Descargue el archivo NEOMapper-4.2.3-Windows-x64-Setup.exe de la página oficial de lanzamientos. Ejecute el instalador y abra el programa a través del menú Inicio o el acceso directo opcional del Escritorio.",
+    "A versão 4.2.3 não possui assinatura digital. O Windows pode mostrar um aviso de reputação. Confirme que o arquivo veio da página oficial e compare seu SHA 256 com SHA256SUMS.txt.": "La versión 4.2.3 no tiene firma digital. Windows puede mostrar una advertencia de reputación. Confirme que el archivo proviene de la página oficial y compare su SHA 256 con SHA256SUMS.txt.",
+    "Fim do Manual do Usuário do NEOMapper 4.2.3": "Fin del Manual de Usuario NEOMapper 4.2.3"
   }
 }

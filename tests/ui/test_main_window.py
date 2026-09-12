@@ -45,6 +45,24 @@ class MainWindowTests(unittest.TestCase):
                     self.assertEqual(window.anim_step_combo.itemText(window.anim_step_combo.findData("year")), year)
             finally:
                 window.close()
+
+    def test_animation_identifies_selected_map_and_player_frame_requirement(self) -> None:
+        with tempfile.TemporaryDirectory() as folder, patch.dict(os.environ, {"NEOMAPPER_DATA_DIR": folder}):
+            window = NEOMapperMainWindow()
+            try:
+                self.assertIn("Visibility Map", window.animation_map_notice.text())
+                self.assertTrue(window.animation_sky_map_note.isHidden())
+                self.assertEqual(window.cb_anim_keep_frames.text(), "Keep generated frames\n(required for Player)")
+                window.map_type_combo.setCurrentText("Sky Map")
+                self.assertIn("Sky Map", window.animation_map_notice.text())
+                self.assertFalse(window.animation_sky_map_note.isHidden())
+                self.assertIn("above the horizon", window.animation_sky_map_note.text())
+                window.language_header_combo.setCurrentText("PT")
+                self.assertIn("Mapa da animação: Mapa celeste", window.animation_map_notice.text())
+                self.assertIn("acima do horizonte", window.animation_sky_map_note.text())
+                self.assertEqual(window.cb_anim_keep_frames.text(), "Manter quadros gerados\n(necessário para usar o Reprodutor)")
+            finally:
+                window.close()
     def test_generation_limits_default_to_500_and_persist(self) -> None:
         with tempfile.TemporaryDirectory() as folder, patch.dict(os.environ, {"NEOMAPPER_DATA_DIR": folder}):
             window = NEOMapperMainWindow()

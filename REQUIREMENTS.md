@@ -127,6 +127,10 @@ animações temporais.
 
 ## 3. Requisitos não funcionais
 
+- O instalador requer Windows 10 ou posterior e sistema operacional de 64 bits.
+  A instalação alerta quando o computador possui menos de 8 GB de memória física
+  e alerta sobre possível instabilidade abaixo de 4 GB, sem bloqueá-la somente
+  por esse critério.
 - Compatibilidade com Python 3.11 e 3.12 no Windows. A linha estável atual de
   `pyproj`/PROJ usada pelo aplicativo ainda não fornece wheels Windows para
   Python 3.13 ou superior.

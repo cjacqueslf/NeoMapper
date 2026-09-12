@@ -231,11 +231,11 @@ def build_manual() -> None:
 
     heading(document, "Instalação e primeiros ajustes")
     heading(document, "Instalador", 2)
-    paragraph(document, "Baixe o arquivo NEOMapper-4.2.0-Windows-x64-Setup.exe na página oficial de Releases. Execute o instalador e abra o programa pelo menu Iniciar ou pelo atalho opcional da Área de Trabalho.")
+    paragraph(document, f"Baixe o arquivo NEOMapper-{APP_VERSION}-Windows-x64-Setup.exe na página oficial de Releases. Execute o instalador e abra o programa pelo menu Iniciar ou pelo atalho opcional da Área de Trabalho.")
     heading(document, "Edição portátil", 2)
     paragraph(document, "Extraia todo o conteúdo de NEOMapper-Windows-x64.zip para uma pasta e execute NEOMapper.exe. Não mova apenas o executável, pois ele depende da pasta interna que o acompanha.")
     heading(document, "Aviso do Windows", 2)
-    paragraph(document, "A versão 4.2.0 não possui assinatura digital. O Windows pode mostrar um aviso de reputação. Confirme que o arquivo veio da página oficial e compare seu SHA 256 com SHA256SUMS.txt.")
+    paragraph(document, f"A versão {APP_VERSION} não possui assinatura digital. O Windows pode mostrar um aviso de reputação. Confirme que o arquivo veio da página oficial e compare seu SHA 256 com SHA256SUMS.txt.")
     heading(document, "Antes da primeira busca", 2)
     bullet(document, "Abra Ajustes e revise o local de referência.")
     bullet(document, "Escolha UTC ou LOCAL; essa seleção afeta entradas e horários exibidos.")

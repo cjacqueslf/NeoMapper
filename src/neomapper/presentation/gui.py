@@ -77,6 +77,11 @@ QLabel#Muted {
     color: #9aa8b5;
     font-size: 12px;
 }
+QLabel#AnimationMapNotice {
+    color: #ffd166;
+    font-size: 13px;
+    font-weight: 600;
+}
 QLabel#MetricValue {
     color: #f3f6fb;
     font-size: 18px;
@@ -646,6 +651,7 @@ class NEOMapperMainWindow(QMainWindow):
             self.cb_obs_box, self.tr_widgets["Window box position"], self.obs_box_pos_combo,
         )
         self.map_type_combo.currentIndexChanged.connect(self._update_map_type_controls)
+        self.map_type_combo.currentIndexChanged.connect(self._update_animation_map_notice)
         self._update_map_type_controls()
         self.layers_next_btn = QPushButton("Continue to Animation →")
         self.layers_next_btn.setObjectName("Blue")
@@ -661,6 +667,11 @@ class NEOMapperMainWindow(QMainWindow):
         anim_layout.setContentsMargins(8, 8, 8, 8)
         anim_layout.setSpacing(10)
         anim_layout.addWidget(self.create_section_label("Animation"))
+        self.animation_map_notice = QLabel()
+        self.animation_map_notice.setObjectName("AnimationMapNotice")
+        self.animation_map_notice.setWordWrap(True)
+        anim_layout.addWidget(self.animation_map_notice)
+        self._update_animation_map_notice()
         initial_time = self.datetime_edit.dateTime()
         self.anim_start_edit = self.create_datetime_field(anim_layout, "Start time", initial_time)
         self.anim_end_edit = self.create_datetime_field(anim_layout, "End time", initial_time.addSecs(86400))
@@ -679,7 +690,10 @@ class NEOMapperMainWindow(QMainWindow):
         self.anim_format_combo = self.create_combo_field(anim_layout, "Output format", ["GIF", "MP4", "GIF + MP4", "Frames PNG"])
         self.cb_anim_info_panel = self.create_check(anim_layout, "Show information panel", True)
         self.cb_anim_trail = self.create_check(anim_layout, "Keep Previous Positions (Trail)", False)
-        self.cb_anim_keep_frames = self.create_check(anim_layout, "Keep generated frames", False)
+        self.cb_anim_keep_frames = self.create_check(
+            anim_layout, "Keep generated frames\n(required for Player)", False
+        )
+        self.cb_anim_keep_frames.setMinimumHeight(42)
         anim_buttons = QHBoxLayout()
         self.generate_anim_btn = QPushButton("🎞️  Generate Animation")
         self.generate_anim_btn.setObjectName("Blue")
@@ -707,6 +721,11 @@ class NEOMapperMainWindow(QMainWindow):
         anim_note.setWordWrap(True)
         self.tr_widgets["GIFs always play in an infinite loop. End Time controls the final rendered frame."] = anim_note
         anim_layout.addWidget(anim_note)
+        self.animation_sky_map_note = QLabel()
+        self.animation_sky_map_note.setObjectName("Muted")
+        self.animation_sky_map_note.setWordWrap(True)
+        anim_layout.addWidget(self.animation_sky_map_note)
+        self._update_animation_map_notice()
         anim_layout.addStretch()
         self.right_stack.addWidget(anim_page)
 
@@ -988,6 +1007,28 @@ class NEOMapperMainWindow(QMainWindow):
         self.tr_widgets["Star magnitude limit"].setVisible(is_sky)
         for control in self.visibility_map_controls:
             control.setVisible(not is_sky)
+
+    def _update_animation_map_notice(self) -> None:
+        """Show which map the animation will render from the Layers selection."""
+        if not hasattr(self, "animation_map_notice"):
+            return
+        map_type = self.map_type_combo.currentData() or self.map_type_combo.currentText()
+        map_name = self.translator.tr(map_type)
+        self.animation_map_notice.setText(
+            self.translator.tr(
+                "Animation map: {map}. To change it, return to the Layers tab and select the desired map.",
+                map=map_name,
+            )
+        )
+        if hasattr(self, "animation_sky_map_note"):
+            is_sky_map = map_type == "Sky Map"
+            self.animation_sky_map_note.setVisible(is_sky_map)
+            if is_sky_map:
+                self.animation_sky_map_note.setText(
+                    self.translator.tr(
+                        "For Sky Map animations, the object is plotted only at times when it is above the horizon."
+                    )
+                )
 
     def _continue_to_animation(self) -> None:
         self.workflow_step = 3
@@ -1490,6 +1531,7 @@ class NEOMapperMainWindow(QMainWindow):
             if label.text() == previous.tr(key):
                 label.setText(Translator(lang).tr(key))
         self.translator = Translator(lang)
+        self._update_animation_map_notice()
         self.player_play_btn.setText(self.translator.tr("Pause" if self.player_timer.isActive() else "Play"))
         self.moon_curve_btn.setText(self.translator.tr("Hide Moon" if self.moon_curve_btn.isChecked() else "Show Moon"))
         translations = self.translator.merged()
@@ -1844,7 +1886,12 @@ class NEOMapperMainWindow(QMainWindow):
                 outputs = [result.get("frames_dir", "")]
             self.progress.setValue(100)
             self.status_label.setText(self.translator.tr("Animation ready: {files}", files="; ".join(str(Path(x).name) for x in outputs)))
-            self.show_center_message(self.translator.tr("Animation ready. Use the player below or open the animation folder."), color="#7dff9b")
+            player_message = (
+                "Animation ready. Use the player below or open the animation folder."
+                if keep_frames
+                else "Animation ready. To use Player, generate it again with Keep generated frames enabled."
+            )
+            self.show_center_message(self.translator.tr(player_message), color="#7dff9b")
             if hasattr(self, "anim_progress_label"):
                 self.anim_progress_label.setText(self.translator.tr("Animation ready: {files}", files="; ".join(str(Path(x).name) for x in outputs)))
             # Preview last generated frame when available.

@@ -2,6 +2,16 @@
 
 Todas as mudanças relevantes do NEOMapper serão registradas neste arquivo.
 
+## 4.2.3 — 2026-09-12
+
+### Alterado
+
+- A aba Animação informa em destaque qual mapa será gerado, orienta a troca na
+  aba Camadas e esclarece que o Player exige a preservação dos quadros gerados.
+  Para Mapa celeste, também informa que o objeto só é plotado acima do horizonte.
+- O instalador bloqueia Windows anterior ao 10 e sistemas de 32 bits. Ele alerta
+  sobre memória física abaixo de 8 GB, com aviso reforçado abaixo de 4 GB.
+
 ## 4.2.2 — 2026-09-11
 
 ### Incluído
