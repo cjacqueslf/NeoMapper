@@ -2,6 +2,13 @@
 
 Todas as mudanças relevantes do NEOMapper serão registradas neste arquivo.
 
+## 4.2.5 — 2026-09-20
+
+### Corrigido
+
+- O teste de consistência de versão acompanha a versão publicada, permitindo a
+  validação e a geração automatizada dos artefatos de release.
+
 ## 4.2.4 — 2026-09-20
 
 ### Alterado

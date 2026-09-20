@@ -4,12 +4,12 @@ Aplicação desktop para gerar mapas de visibilidade, cartas do céu e animaçõ
 para objetos próximos da Terra. A aplicação consulta primeiro o JPL Horizons e
 usa o serviço MPES do Minor Planet Center como contingência.
 
-O código canônico está na versão `4.2.4`. Consulte `REQUIREMENTS.md`,
+O código canônico está na versão `4.2.5`. Consulte `REQUIREMENTS.md`,
 `ARCHITECTURE.md` e `ROADMAP.md` antes de desenvolver funcionalidades.
 
 ## Instalação para usuários
 
-No Windows, baixe `NEOMapper-4.2.4-Windows-x64-Setup.exe` na página da versão
+No Windows, baixe `NEOMapper-4.2.5-Windows-x64-Setup.exe` na página da versão
 publicada e siga o assistente. O arquivo `NEOMapper-Windows-x64.zip` é a edição
 portátil: extraia o conteúdo e execute `NEOMapper.exe`. Configurações, logs e
 produtos gerados ficam no diretório de dados do usuário, não na pasta do
@@ -42,7 +42,7 @@ publicar uma versão, atualize a versão e o changelog, faça o merge na branch
 principal e crie uma tag anotada com o mesmo número:
 
 ```powershell
-git tag -a v4.2.4 -m "NEOMapper 4.2.4"
+git tag -a v4.2.5 -m "NEOMapper 4.2.5"
 git push origin master --follow-tags
 ```
 
