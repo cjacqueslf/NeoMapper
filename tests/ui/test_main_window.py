@@ -286,6 +286,20 @@ class MainWindowTests(unittest.TestCase):
                             window.generate_animation_output()
                             self.assertEqual(generate.call_args.kwargs["max_frames"], 500)
                             self.assertEqual(Path(generate.call_args.kwargs["base_output"]).parent, gui.object_output_dir(window.object_edit.text()))
+                            self.assertIn(
+                                gui.safe_filename(window.ref_name_edit.text()),
+                                Path(generate.call_args.kwargs["base_output"]).name,
+                            )
+                            self.assertIn(
+                                f"_{mode}_",
+                                Path(generate.call_args.kwargs["base_output"]).name,
+                            )
+                            self.assertIn(
+                                f"start_{requested_start.toString('yyyyMMdd_HHmmss')}_step_5min_"
+                                f"end_{requested_end.toString('yyyyMMdd_HHmmss')}",
+                                Path(generate.call_args.kwargs["base_output"]).name,
+                            )
+                            self.assertIn("_playback_8fps_", Path(generate.call_args.kwargs["base_output"]).name)
                             self.assertEqual(generate.call_args.kwargs["start_time"], requested_start.toString("yyyy-MM-dd HH:mm:ss"))
                             self.assertEqual(generate.call_args.kwargs["end_time"], requested_end.toString("yyyy-MM-dd HH:mm:ss"))
                             self.assertEqual(generate.call_args.kwargs["time_mode"], mode)

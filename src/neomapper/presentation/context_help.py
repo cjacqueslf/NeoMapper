@@ -8,6 +8,7 @@ from PySide6.QtCore import QUrl
 from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import QDialog, QWidget, QVBoxLayout, QTextBrowser, QPushButton, QMessageBox
 from neomapper.presentation.i18n import Translator
+from neomapper.shared.version import APP_VERSION
 
 
 HELP_TOPICS = {
@@ -51,9 +52,9 @@ def show_help(parent: QWidget, language: str) -> None:
 def manual_path(language: str) -> Path:
     """Locate the bundled manual that matches the selected UI language."""
     filename = {
-        "PT": "Manual_do_Usuario_NEOMapper_4.2.0.docx",
-        "ES": "Manual_del_Usuario_NEOMapper_4.2.0.docx",
-    }.get(language.upper(), "NEOMapper_User_Manual_4.2.0.docx")
+        "PT": f"Manual_do_Usuario_NEOMapper_{APP_VERSION}.docx",
+        "ES": f"Manual_del_Usuario_NEOMapper_{APP_VERSION}.docx",
+    }.get(language.upper(), f"NEOMapper_User_Manual_{APP_VERSION}.docx")
     if getattr(sys, "frozen", False):
         return Path(sys.executable).parent / "manuals" / filename
     return Path(__file__).resolve().parents[3] / "docs" / filename

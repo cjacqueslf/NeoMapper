@@ -4,7 +4,12 @@ from unittest.mock import patch
 from astropy.time import Time
 
 from neomapper.application import ephemerides
-from neomapper.infrastructure.ephemeris.mpc import MPCError, MPCNoEphemerisError, parse_mpc_response
+from neomapper.infrastructure.ephemeris.mpc import (
+    MPCError,
+    MPCNoEphemerisError,
+    _mpc_start_date,
+    parse_mpc_response,
+)
 
 SAMPLE = """<html><body><b> (99942) Apophis</b><pre>
 99942 [H=19.00]
@@ -33,8 +38,24 @@ class MPCParserTests(unittest.TestCase):
         self.assertIsNone(rows[1]["vmag"])
 
     def test_rejects_response_without_ephemeris(self):
-        with self.assertRaises(MPCError):
+        with self.assertRaisesRegex(MPCError, "object not found"):
             parse_mpc_response("<html><pre>object not found</pre></html>", "missing")
+
+    def test_reports_plain_text_mpc_service_errors(self):
+        response = (
+            "<html><body>The requested start date is outside the allowable range "
+            "1900/01/01 to 2099/12/31.</body></html>"
+        )
+        with self.assertRaisesRegex(MPCNoEphemerisError, "outside the allowable range"):
+            parse_mpc_response(response, "99942")
+
+
+class MPCRequestTests(unittest.TestCase):
+    def test_formats_utc_time_as_mpes_fractional_day(self):
+        self.assertEqual(
+            _mpc_start_date(Time("2029-04-13 22:00:00", scale="utc")),
+            "2029 04 13.916",
+        )
 
 
 class ProviderFallbackTests(unittest.TestCase):

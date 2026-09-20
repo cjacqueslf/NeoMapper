@@ -18,7 +18,7 @@ versão anterior sem substituir arquivos já publicados.
 Crie uma tag anotada que corresponda exatamente à versão do aplicativo:
 
 ```powershell
-git tag -a v4.2.0 -m "NEOMapper 4.2.0"
+git tag -a v4.2.4 -m "NEOMapper 4.2.4"
 git push origin master --follow-tags
 ```
 

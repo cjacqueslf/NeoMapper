@@ -2,6 +2,22 @@
 
 Todas as mudanças relevantes do NEOMapper serão registradas neste arquivo.
 
+## 4.2.4 — 2026-09-20
+
+### Alterado
+
+- Os nomes de arquivos de animação passam a registrar objeto, local de
+  referência, mapa, início e fim, passo temporal, velocidade de reprodução e
+  escala de tempo (UTC ou LOCAL), além do identificador de geração.
+- Ajuda contextual e geração de manuais usam a versão atual do aplicativo, sem
+  referências fixas à versão 4.2.0.
+
+### Corrigido
+
+- A consulta de contingência ao MPC usa o formato de data esperado pelo MPES e
+  preserva a mensagem de erro textual devolvida pelo serviço quando não há
+  efemérides.
+
 ## 4.2.3 — 2026-09-12
 
 ### Alterado

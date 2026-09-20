@@ -246,7 +246,7 @@ def build_manual() -> None:
     page_break(document)
     heading(document, "Aba Objeto")
     paragraph(document, "Esta é a entrada do fluxo. Informe uma designação reconhecida, como 99942, 1P ou 2026 RW3, selecione a data e clique em Buscar.")
-    figure(document, "01_object.png", "Figura 1  Aba Objeto da versão 4.2.0")
+    figure(document, "01_object.png", f"Figura 1  Aba Objeto da versão {APP_VERSION}")
     heading(document, "Resultado da busca", 2)
     paragraph(document, "Uma busca bem-sucedida mostra o nome resolvido, a distância ao Sol, a distância à Terra e a magnitude. Ela também habilita Plotar Sistema Solar e Continuar para Info Obs. Alterar o objeto ou a data invalida o resultado anterior e exige uma nova busca.")
     heading(document, "Plotar Sistema Solar", 2)
@@ -382,7 +382,7 @@ def build_manual() -> None:
         ["Botões seguintes desabilitados", "Clique em Buscar novamente após alterar objeto ou data."],
         ["Gráfico sem janela verde", "Revise altitude mínima e limite solar; o objeto pode não atender aos dois critérios."],
         ["Resumo demora", "A busca pode consultar centenas de épocas e, em períodos longos, a próxima passagem orbital."],
-        ["Maior aproximação não aparece", "A tabela compacta deve mostrar três linhas; maximize a janela e confirme que está usando a versão 4.2.0."],
+        ["Maior aproximação não aparece", f"A tabela compacta deve mostrar três linhas; maximize a janela e confirme que está usando a versão {APP_VERSION}."],
         ["Mapa celeste sem objeto", "Confira a altitude. Abaixo do horizonte, o marcador não é deslocado artificialmente para a borda."],
         ["Animação recusada", "Aumente o passo, diminua o intervalo ou eleve conscientemente o limite de quadros em Ajustes."],
         ["MP4 falha", "Consulte o log da animação e tente GIF; o codificador pode estar indisponível."],

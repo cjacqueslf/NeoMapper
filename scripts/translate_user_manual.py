@@ -11,6 +11,8 @@ from pathlib import Path
 
 from docx import Document
 
+from neomapper.shared.version import APP_VERSION
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE_PATH = ROOT / "docs" / "manual_translations.json"
@@ -111,7 +113,7 @@ def translate_document(source: Path, language: str, output: Path) -> None:
                     run.text = re.sub(r"Página", page_word, run.text, count=1)
     document.core_properties.title = translations.get("Manual do Usuário do NEOMapper", document.core_properties.title)
     document.core_properties.subject = translations.get(
-        "Operação do NEOMapper versão 4.2.0", f"NEOMapper 4.2.0 — {LANGUAGES[language][0]}"
+        f"Operação do NEOMapper versão {APP_VERSION}", f"NEOMapper {APP_VERSION} — {LANGUAGES[language][0]}"
     )
     output.parent.mkdir(parents=True, exist_ok=True)
     document.save(output)

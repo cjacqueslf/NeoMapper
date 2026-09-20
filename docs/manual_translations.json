@@ -240,9 +240,17 @@
     "Versão 4.2.2   Windows   Setembro de 2026": "Version 4.2.2 Windows September 2026",
     "Fim do Manual do Usuário do NEOMapper 4.2.2": "End of NEOMapper 4.2.2 User Manual",
     "Versão 4.2.3   Windows   Setembro de 2026": "Version 4.2.3 Windows September 2026",
-    "Baixe o arquivo NEOMapper-4.2.3-Windows-x64-Setup.exe na página oficial de Releases. Execute o instalador e abra o programa pelo menu Iniciar ou pelo atalho opcional da Área de Trabalho.": "Baixe o arquivo NEOMapper-4.2.3-Windows-x64-Setup.exe na página oficial de Releases. Run the installer and open the program via the Start menu or optional Desktop shortcut.",
+    "Baixe o arquivo NEOMapper-4.2.3-Windows-x64-Setup.exe na página oficial de Releases. Execute o instalador e abra o programa pelo menu Iniciar ou pelo atalho opcional da Área de Trabalho.": "Download the NEOMapper-4.2.3-Windows-x64-Setup.exe file from the official Releases page. Run the installer and open the program via the Start menu or optional Desktop shortcut.",
     "A versão 4.2.3 não possui assinatura digital. O Windows pode mostrar um aviso de reputação. Confirme que o arquivo veio da página oficial e compare seu SHA 256 com SHA256SUMS.txt.": "Version 4.2.3 does not have a digital signature. Windows may show a reputation warning. Confirm that the file came from the official page and compare its SHA 256 with SHA256SUMS.txt.",
-    "Fim do Manual do Usuário do NEOMapper 4.2.3": "End of NEOMapper 4.2.3 User Manual"
+    "Fim do Manual do Usuário do NEOMapper 4.2.3": "End of NEOMapper 4.2.3 User Manual",
+    "Figura 1  Aba Objeto da versão 4.2.3": "Figure 1 Object Tab of version 4.2.3",
+    "A tabela compacta deve mostrar três linhas; maximize a janela e confirme que está usando a versão 4.2.3.": "The compact table must show three rows; Maximize the window and confirm that you are using version 4.2.3.",
+    "Versão 4.2.4   Windows   Setembro de 2026": "Version 4.2.4 Windows September 2026",
+    "Baixe o arquivo NEOMapper-4.2.4-Windows-x64-Setup.exe na página oficial de Releases. Execute o instalador e abra o programa pelo menu Iniciar ou pelo atalho opcional da Área de Trabalho.": "Download the file NEOMapper-4.2.4-Windows-x64-Setup.exe from the official Releases page. Run the installer and open the program via the Start menu or optional Desktop shortcut.",
+    "A versão 4.2.4 não possui assinatura digital. O Windows pode mostrar um aviso de reputação. Confirme que o arquivo veio da página oficial e compare seu SHA 256 com SHA256SUMS.txt.": "Version 4.2.4 does not have a digital signature. Windows may show a reputation warning. Confirm that the file came from the official page and compare its SHA 256 with SHA256SUMS.txt.",
+    "Figura 1  Aba Objeto da versão 4.2.4": "Figure 1 Object Tab of version 4.2.4",
+    "Fim do Manual do Usuário do NEOMapper 4.2.4": "End of NEOMapper 4.2.4 User Manual",
+    "A tabela compacta deve mostrar três linhas; maximize a janela e confirme que está usando a versão 4.2.4.": "The compact table must show three rows; Maximize the window and confirm that you are using version 4.2.4."
   },
   "es": {
     "Manual do Usuário do NEOMapper": "Manual de usuario NEOMapper",
@@ -487,6 +495,14 @@
     "Versão 4.2.3   Windows   Setembro de 2026": "Versión 4.2.3 Windows Septiembre de 2026",
     "Baixe o arquivo NEOMapper-4.2.3-Windows-x64-Setup.exe na página oficial de Releases. Execute o instalador e abra o programa pelo menu Iniciar ou pelo atalho opcional da Área de Trabalho.": "Descargue el archivo NEOMapper-4.2.3-Windows-x64-Setup.exe de la página oficial de lanzamientos. Ejecute el instalador y abra el programa a través del menú Inicio o el acceso directo opcional del Escritorio.",
     "A versão 4.2.3 não possui assinatura digital. O Windows pode mostrar um aviso de reputação. Confirme que o arquivo veio da página oficial e compare seu SHA 256 com SHA256SUMS.txt.": "La versión 4.2.3 no tiene firma digital. Windows puede mostrar una advertencia de reputación. Confirme que el archivo proviene de la página oficial y compare su SHA 256 con SHA256SUMS.txt.",
-    "Fim do Manual do Usuário do NEOMapper 4.2.3": "Fin del Manual de Usuario NEOMapper 4.2.3"
+    "Fim do Manual do Usuário do NEOMapper 4.2.3": "Fin del Manual de Usuario NEOMapper 4.2.3",
+    "Figura 1  Aba Objeto da versão 4.2.3": "Figura 1 Pestaña Objeto de la versión 4.2.3",
+    "A tabela compacta deve mostrar três linhas; maximize a janela e confirme que está usando a versão 4.2.3.": "La tabla compacta debe mostrar tres filas; Maximice la ventana y confirme que está utilizando la versión 4.2.3.",
+    "Versão 4.2.4   Windows   Setembro de 2026": "Versión 4.2.4 Windows Septiembre de 2026",
+    "Baixe o arquivo NEOMapper-4.2.4-Windows-x64-Setup.exe na página oficial de Releases. Execute o instalador e abra o programa pelo menu Iniciar ou pelo atalho opcional da Área de Trabalho.": "Descargue el archivo NEOMapper-4.2.4-Windows-x64-Setup.exe de la página oficial de lanzamientos. Ejecute el instalador y abra el programa a través del menú Inicio o el acceso directo opcional del Escritorio.",
+    "A versão 4.2.4 não possui assinatura digital. O Windows pode mostrar um aviso de reputação. Confirme que o arquivo veio da página oficial e compare seu SHA 256 com SHA256SUMS.txt.": "La versión 4.2.4 no tiene firma digital. Windows puede mostrar una advertencia de reputación. Confirme que el archivo proviene de la página oficial y compare su SHA 256 con SHA256SUMS.txt.",
+    "Figura 1  Aba Objeto da versão 4.2.4": "Figura 1 Pestaña Objeto de la versión 4.2.4",
+    "Fim do Manual do Usuário do NEOMapper 4.2.4": "Fin del Manual de Usuario NEOMapper 4.2.4",
+    "A tabela compacta deve mostrar três linhas; maximize a janela e confirme que está usando a versão 4.2.4.": "La tabla compacta debe mostrar tres filas; Maximice la ventana y confirme que está utilizando la versión 4.2.4."
   }
 }

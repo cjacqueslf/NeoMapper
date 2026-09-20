@@ -29,6 +29,7 @@ class _ResponseParser(HTMLParser):
         self.pre_blocks = []
         self.bold_blocks = []
         self.parts = []
+        self.text_parts = []
 
     def handle_starttag(self, tag, attrs):
         if tag.lower() == "pre":
@@ -45,6 +46,7 @@ class _ResponseParser(HTMLParser):
             self.in_bold = False
 
     def handle_data(self, data):
+        self.text_parts.append(data)
         if self.in_pre or self.in_bold:
             self.parts.append(data)
 
@@ -98,7 +100,7 @@ def parse_mpc_response(html: str, original_query: str) -> list[dict]:
                 "jd": float(Time(utc, scale="utc").jd),
             })
     if not rows:
-        detail = " ".join(" ".join(x.split()) for x in parser.pre_blocks)[:240] or "no ephemeris rows"
+        detail = " ".join(" ".join(parser.text_parts).split())[:240] or "no ephemeris rows"
         raise MPCNoEphemerisError(f"MPC did not return an ephemeris for {original_query!r}: {detail}")
     return rows
 
@@ -115,13 +117,27 @@ def _step_parts(step):
     return amount, unit, days
 
 
+def _mpc_start_date(start: Time) -> str:
+    """Format a UTC instant as the MPES ``YYYY MM DD.ddd`` date field."""
+    utc = start.utc
+    date = utc.datetime
+    day_fraction = (
+        date.hour * 3600 + date.minute * 60 + date.second + date.microsecond / 1_000_000
+    ) / 86_400
+    # MPES accepts at most three decimal places in its fractional-day field.
+    # Truncate rather than round so a timestamp at the end of a month can never
+    # become an invalid next-day date through floating-point rounding.
+    day_value = date.day + math.floor(day_fraction * 1_000) / 1_000
+    return f"{date.year:04d} {date.month:02d} {day_value:06.3f}"
+
+
 def _request_mpc(object_query, start, count, step, timeout=25.0):
     amount, unit, _ = _step_parts(step)
     if not 1 <= count <= 9999:
         raise ValueError("MPC request must contain 1 to 9999 dates")
     fields = [
         ("ty", "e"), ("TextArea", str(object_query).strip()),
-        ("d", start.utc.strftime("%Y-%m-%d %H:%M:%S")), ("l", str(count)),
+        ("d", _mpc_start_date(start)), ("l", str(count)),
         ("i", str(amount)), ("u", unit), ("uto", "0"), ("c", ""),
         ("long", ""), ("lat", ""), ("alt", ""), ("raty", "a"),
         ("s", "t"), ("m", "m"), ("adir", "N"), ("oed", ""),

@@ -1817,17 +1817,25 @@ class NEOMapperMainWindow(QMainWindow):
             selected_step = self.anim_step_combo.currentData()
             calendar_step = selected_step if isinstance(selected_step, str) else None
             step_min = selected_step if isinstance(selected_step, int) else 1
-            stamp = start_qdt.toString("yyyyMMdd_HHmmss")
+            start_stamp = start_qdt.toString("yyyyMMdd_HHmmss")
+            end_stamp = end_qdt.toString("yyyyMMdd_HHmmss")
+            step_label = safe_filename(self.anim_step_combo.currentText()).replace("_", "")
             generation_stamp = QDateTime.currentDateTime().toString("HHmmsszzz")
+            time_mode = self.time_mode_combo.currentText().upper()
+            fps = (1, 4, 8, 15, 25)[self.anim_playback_combo.currentIndex()]
             map_name = self.translator.tr(self.map_type_combo.currentData() or self.map_type_combo.currentText())
             safe_map_name = safe_filename(map_name).replace("_", "-")
-            base_output = out_dir / f"{safe_obj}_{safe_map_name}_animation_{stamp}_{generation_stamp}"
+            safe_reference_name = safe_filename(self.ref_name_edit.text())
+            base_output = out_dir / (
+                f"{safe_obj}_{safe_reference_name}_{safe_map_name}_animation_"
+                f"start_{start_stamp}_step_{step_label}_end_{end_stamp}_"
+                f"playback_{fps}fps_{time_mode}_{generation_stamp}"
+            )
 
             fmt = self.anim_format_combo.currentText().upper()
             export_gif = "GIF" in fmt
             export_mp4 = "MP4" in fmt
             keep_frames = self.cb_anim_keep_frames.isChecked() or "FRAMES" in fmt or (not export_gif and not export_mp4)
-            fps = (1, 4, 8, 15, 25)[self.anim_playback_combo.currentIndex()]
             render_started = time.monotonic()
 
             def update_animation_progress(payload):

@@ -16,11 +16,12 @@ from neomapper.application.favorites import Favorite
 from neomapper.domain.object_summary import ObjectSummary, SummarySample, SummaryTarget
 from neomapper.infrastructure.favorites import JsonFavoritesRepository
 from neomapper.presentation import gui
-from neomapper.presentation.context_help import HELP_TOPICS, help_text
+from neomapper.presentation.context_help import HELP_TOPICS, help_text, manual_path
 from neomapper.presentation.favorites import FavoritesDialog
 from neomapper.presentation.i18n import load_catalog
 from neomapper.presentation.object_summary import ObjectSummaryWidget
 from neomapper.presentation.summary_export import export_summary
+from neomapper.shared.version import APP_VERSION
 
 
 def test_favorites_round_trip_unicode_and_atomic_failure(tmp_path: Path) -> None:
@@ -159,3 +160,15 @@ def test_help_and_about_in_all_languages(tmp_path: Path) -> None:
                 assert window.channel_label.openExternalLinks()
         finally:
             window.close()
+
+
+@pytest.mark.parametrize(
+    ("language", "filename"),
+    [
+        ("PT", "Manual_do_Usuario_NEOMapper"),
+        ("ES", "Manual_del_Usuario_NEOMapper"),
+        ("EN", "NEOMapper_User_Manual"),
+    ],
+)
+def test_contextual_manual_path_uses_current_application_version(language: str, filename: str) -> None:
+    assert manual_path(language).name == f"{filename}_{APP_VERSION}.docx"
